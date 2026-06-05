@@ -96,6 +96,59 @@ Se organizaron las acciones principales del programa en métodos separados para 
 Seleccione una opcion:
 ```
 
+## Avances del día 2
+
+Durante el segundo día se continuó el proyecto aplicando conceptos de programación orientada a objetos y manejo de estructuras de datos en Java.
+
+Se creó la clase `Estudiante`, la cual contiene atributos como nombre, carnet y nota.  
+También se agregó un método para mostrar la información del estudiante.
+
+Se aplicó encapsulamiento en la clase `Estudiante`, utilizando atributos privados y métodos `get` y `set`.
+
+
+
+Se agregó herencia mediante la clase `Persona`.  
+La clase `Estudiante` ahora hereda de `Persona`, reutilizando el atributo nombre y el método para mostrar información.
+
+
+
+Se reemplazó el arreglo de estudiantes por un `ArrayList<Estudiante>`.  
+Esto permite manejar la lista de estudiantes de una forma más flexible.
+
+
+
+Se agregó un `HashMap<String, Estudiante>` para buscar estudiantes usando el carnet como clave.
+
+
+
+Se implementó manejo de errores con `try catch`, principalmente para validar entradas numéricas y evitar que el programa se cierre cuando el usuario ingresa datos incorrectos.
+
+## Temas aplicados
+
+- Clases y objetos.
+- Atributos y métodos.
+- Encapsulamiento.
+- Getters y setters.
+- Herencia.
+- Sobrescritura de métodos.
+- ArrayList.
+- HashMap.
+- Manejo de excepciones con `try catch`.
+
+## Ejemplo de ejecución del día 2
+
+```text
+
+```
+
+1. Registrar estudiante
+2. Listar estudiantes
+3. Mostrar cantidad de estudiantes
+4. Buscar estudiante por carnet
+5. Buscar estudiante por nombre
+6. Salir
+   Seleccione una opcion:
+
 ## Conclusión
 
 Este proyecto representa una primera práctica de Java siguiendo una ruta de aprendizaje estructurada.  
