@@ -1,50 +1,60 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Main {
 
-    private static final int MAX_ESTUDIANTES = 10;
-    private static String[] estudiantes = new String[MAX_ESTUDIANTES];
-    private static int totalEstudiantes = 0;
-
+    private static ArrayList<Estudiante> estudiantes = new ArrayList<>();
+    private static HashMap<String, Estudiante> mapaEstudiantes = new HashMap<>();
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
 
         mostrarEncabezado();
-        mostrarEjemplosBasicos();
 
-        int opcion;
+        int opcion = -1;
 
         do {
             mostrarMenu();
-            opcion = leerOpcion();
 
-            switch (opcion) {
-                case 1:
-                    registrarEstudiante();
-                    break;
+            try {
+                opcion = leerEntero("Seleccione una opcion: ");
 
-                case 2:
-                    listarEstudiantes();
-                    break;
+                switch (opcion) {
+                    case 1:
+                        registrarEstudiante();
+                        break;
 
-                case 3:
-                    mostrarCantidadEstudiantes();
-                    break;
+                    case 2:
+                        listarEstudiantes();
+                        break;
 
-                case 4:
-                    buscarEstudiante();
-                    break;
+                    case 3:
+                        mostrarCantidadEstudiantes();
+                        break;
 
-                case 0:
-                    System.out.println("Saliendo del programa...");
-                    break;
+                    case 4:
+                        buscarEstudiantePorCarnet();
+                        break;
 
-                default:
-                    System.out.println("Opcion no valida. Intente nuevamente.");
-                    break;
+                    case 5:
+                        buscarEstudiantePorNombre();
+                        break;
+
+                    case 0:
+                        System.out.println("Saliendo del programa...");
+                        break;
+
+                    default:
+                        System.out.println("Opcion no valida. Intente nuevamente.");
+                        break;
+                }
+
+            } catch (Exception e) {
+                System.out.println("Ocurrio un error inesperado: " + e.getMessage());
+                scanner.nextLine();
             }
 
         } while (opcion != 0);
@@ -56,29 +66,7 @@ public class Main {
         System.out.println("=====================================");
         System.out.println("     Proyecto Java Roadmap Practice  ");
         System.out.println("=====================================");
-    }
-
-    private static void mostrarEjemplosBasicos() {
-        String curso = "Java";
-        int semana = 1;
-        double promedio = 85.5;
-        char seccion = 'A';
-        boolean estudianteActivo = true;
-
-        double puntosExtra = promedio * 0.10;
-        double promedioFinal = promedio + puntosExtra;
-
-        int promedioEntero = (int) promedioFinal;
-
-        System.out.println("\nEjemplos basicos del roadmap de Java:");
-        System.out.println("Curso: " + curso);
-        System.out.println("Semana: " + semana);
-        System.out.println("Promedio inicial: " + promedio);
-        System.out.println("Seccion: " + seccion);
-        System.out.println("Estudiante activo: " + estudianteActivo);
-        System.out.println("Puntos extra: " + puntosExtra);
-        System.out.println("Promedio final: " + promedioFinal);
-        System.out.println("Promedio convertido a entero: " + promedioEntero);
+        System.out.println("Dia 2: POO, encapsulamiento, herencia, colecciones y excepciones");
     }
 
     private static void mostrarMenu() {
@@ -86,29 +74,13 @@ public class Main {
         System.out.println("1. Registrar estudiante");
         System.out.println("2. Listar estudiantes");
         System.out.println("3. Mostrar cantidad de estudiantes");
-        System.out.println("4. Buscar estudiante");
+        System.out.println("4. Buscar estudiante por carnet");
+        System.out.println("5. Buscar estudiante por nombre");
         System.out.println("0. Salir");
-        System.out.print("Seleccione una opcion: ");
-    }
-
-    private static int leerOpcion() {
-        while (!scanner.hasNextInt()) {
-            System.out.println("Debe ingresar un numero.");
-            scanner.nextLine();
-            System.out.print("Seleccione una opcion: ");
-        }
-
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
-
-        return opcion;
     }
 
     private static void registrarEstudiante() {
-        if (totalEstudiantes >= MAX_ESTUDIANTES) {
-            System.out.println("No se pueden registrar mas estudiantes.");
-            return;
-        }
+        System.out.println("\n--- Registro de estudiante ---");
 
         System.out.print("Ingrese el nombre del estudiante: ");
         String nombre = scanner.nextLine();
@@ -118,32 +90,72 @@ public class Main {
             return;
         }
 
-        estudiantes[totalEstudiantes] = nombre.trim();
-        totalEstudiantes++;
+        System.out.print("Ingrese el carnet del estudiante: ");
+        String carnet = scanner.nextLine();
+
+        if (carnet.trim().isEmpty()) {
+            System.out.println("El carnet no puede estar vacio.");
+            return;
+        }
+
+        if (mapaEstudiantes.containsKey(carnet)) {
+            System.out.println("Ya existe un estudiante con ese carnet.");
+            return;
+        }
+
+        double nota = leerDouble("Ingrese la nota del estudiante: ");
+
+        if (nota < 0 || nota > 100) {
+            System.out.println("La nota debe estar entre 0 y 100.");
+            return;
+        }
+
+        Estudiante estudiante = new Estudiante(nombre, carnet, nota);
+
+        estudiantes.add(estudiante);
+        mapaEstudiantes.put(carnet, estudiante);
 
         System.out.println("Estudiante registrado correctamente.");
     }
 
     private static void listarEstudiantes() {
-        if (totalEstudiantes == 0) {
+        if (estudiantes.isEmpty()) {
             System.out.println("No hay estudiantes registrados.");
             return;
         }
 
-        System.out.println("\nListado de estudiantes:");
+        System.out.println("\n--- Listado de estudiantes ---");
 
-        for (int i = 0; i < totalEstudiantes; i++) {
-            System.out.println((i + 1) + ". " + estudiantes[i]);
+        for (int i = 0; i < estudiantes.size(); i++) {
+            System.out.println((i + 1) + ". " + estudiantes.get(i));
         }
     }
 
     private static void mostrarCantidadEstudiantes() {
-        System.out.println("Cantidad de estudiantes registrados: " + totalEstudiantes);
-        System.out.println("Espacios disponibles: " + (MAX_ESTUDIANTES - totalEstudiantes));
+        System.out.println("Cantidad de estudiantes registrados: " + estudiantes.size());
     }
 
-    private static void buscarEstudiante() {
-        if (totalEstudiantes == 0) {
+    private static void buscarEstudiantePorCarnet() {
+        if (estudiantes.isEmpty()) {
+            System.out.println("No hay estudiantes registrados.");
+            return;
+        }
+
+        System.out.print("Ingrese el carnet a buscar: ");
+        String carnet = scanner.nextLine();
+
+        Estudiante estudiante = mapaEstudiantes.get(carnet);
+
+        if (estudiante != null) {
+            System.out.println("\nEstudiante encontrado:");
+            estudiante.mostrarInfo();
+        } else {
+            System.out.println("No se encontro ningun estudiante con ese carnet.");
+        }
+    }
+
+    private static void buscarEstudiantePorNombre() {
+        if (estudiantes.isEmpty()) {
             System.out.println("No hay estudiantes registrados.");
             return;
         }
@@ -153,17 +165,45 @@ public class Main {
 
         boolean encontrado = false;
 
-        for (int i = 0; i < totalEstudiantes; i++) {
-            String nombreActual = estudiantes[i].toLowerCase();
+        for (Estudiante estudiante : estudiantes) {
+            String nombreActual = estudiante.getNombre().toLowerCase();
 
             if (nombreActual.contains(nombreBuscado)) {
-                System.out.println("Encontrado: " + estudiantes[i]);
+                System.out.println(estudiante);
                 encontrado = true;
             }
         }
 
         if (!encontrado) {
             System.out.println("No se encontro ningun estudiante con ese nombre.");
+        }
+    }
+
+    private static int leerEntero(String mensaje) {
+        int numero;
+
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                numero = Integer.parseInt(scanner.nextLine());
+                return numero;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: debe ingresar un numero entero.");
+            }
+        }
+    }
+
+    private static double leerDouble(String mensaje) {
+        double numero;
+
+        while (true) {
+            try {
+                System.out.print(mensaje);
+                numero = Double.parseDouble(scanner.nextLine());
+                return numero;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: debe ingresar un numero decimal valido.");
+            }
         }
     }
 }
